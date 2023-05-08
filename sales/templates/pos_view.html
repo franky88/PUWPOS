@@ -7,8 +7,12 @@
         <strong>Products</strong>
         <br>
         {% for product in products %}
-            <a href="{% url 'sales:cart_add' product.id %}">{{ product.name }}</a><br>
-            <small>{{ product.best_price }}</small>
+            <h4>{{ product.name }}</h4><br>
+            <small>{{ product.best_price }}</small><br>
+            <h4>{{ product.quantity }}</h4>
+            <div class="float-right" style="text-align: right;">
+                <a href="{% url 'sales:cart_add' product.id %}">Add</a>
+            </div>
             <hr>
         {% endfor %}
     </div>

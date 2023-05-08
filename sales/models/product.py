@@ -42,6 +42,15 @@ class Product(BaseTime):
         total = self.best_price * self.quantity
         return total
 
+class StockTransaction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    stock = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.stock.name.title()
+
 @receiver(pre_save, sender=Product)
 def product_pre_save(sender, instance, *args, **kwargs):
     if instance.product_code == "":

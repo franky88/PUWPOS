@@ -15,13 +15,17 @@ def billing_information_view(request):
         if form.is_valid():
             customer = form.save()
             for item in cart:
-                OrderItem.objects.create(
-                    customer_order=customer,
-                    products=item['product'],
-                    price=item['price'],
-                    quantity=item['quantity']
+                order = OrderItem(
+                    customer_order = customer,
+                    products = item['product'],
+                    price = item['price'],
+                    quantity = item['quantity']
                 )
+                order.products.quantity -= order.quantity
+                order.products.save()
+                order.save()
             cart.clear()
+            return redirect('sales:pos_view')
     else:
         form = CustomerForm()
     return render(request, 'pos/billing_information.html', {'form': form, 'cart': cart, 'customers': customers})

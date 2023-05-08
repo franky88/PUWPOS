@@ -4,15 +4,11 @@
 {% block content %}
 <div class="row">
     <div class="col-sm-6">
-        <strong>Product list</strong> | <a href="">Add product</a>
-        {% for product in products %}
+        <strong>Product list</strong> | <a href="">Add stock</a>
+        {% for stock in stocks %}
             <div>
-                <a href="{% url 'sales:cart_add' product.id %}">{{ product.name }}</a> <br>
-                <small>{{ product.bar_code|upper }}</small><br>
-                {{ product.price }} <br>
-                {{ product.sub_total }} <br>
-                <small>{{ product.product_code }}</small><br>
-                <h3 class="text-muted">{{ product.quantity }}</h3>
+                <a href="{% url 'sales:cart_add' stock.id %}">{{ stock.stock.name|upper }}</a> <br>
+                <small>{{ stock.quantity }}</small><br>
             </div><hr>
         {% endfor %}
     </div>

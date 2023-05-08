@@ -24,7 +24,7 @@ class POSView(View):
 def cart_add(request, id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=id)
-    cart.add(product=product, quantity=1, update_quantity=1)
+    cart.add(product=product, quantity=1, update_quantity=True)
     return redirect('sales:pos_view')
 
 def cart_remove(request, id):
@@ -41,4 +41,15 @@ def cart_updated(request, id):
         number = int(request.POST.get('number'))
     product = get_object_or_404(Product, id=id)
     cart.add(product=product, quantity=number, update_quantity=True)
+    return redirect('sales:pos_view')
+
+@require_POST
+def stock_out(request, id):
+    number = None
+    cart = Cart(request)
+    if request.method == 'POST':
+        number = int(request.POST.get('number'))
+    product = get_object_or_404(Product, id=id)
+    updated_qty = product.quantity - int(request.POST.get('number'))
+    cart.add(product=product, quantity=updated_qty, update_quantity=True)
     return redirect('sales:pos_view')
