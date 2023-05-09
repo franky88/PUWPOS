@@ -8,7 +8,10 @@
         {% for stock in stocks %}
             <div>
                 <a href="{% url 'sales:cart_add' stock.id %}">{{ stock.stock.name|upper }}</a> <br>
-                <small>{{ stock.quantity }}</small><br>
+                <small>QTY {{ stock.quantity }}</small><br>
+                <small>Cost {{ stock.stock.cost }}</small><br>
+                <small>Price {{ stock.stock.price }}</small><br>
+                <small>Disc {{ stock.stock.best_price }}</small><br>
             </div><hr>
         {% endfor %}
     </div>

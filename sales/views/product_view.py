@@ -50,8 +50,15 @@ class StockView(View):
         form = self.form_class(request.POST or None)
         if form.is_valid():
             obj = form.save(commit=False)
+            print("cost", obj.stock.cost)
             obj.user = request.user
             obj.stock.quantity += form.cleaned_data['quantity']
+            obj.cost = form.cleaned_data['cost']
+            if obj.cost:
+                new_cost = (obj.stock.cost + obj.cost)/2
+            else:
+                new_cost = obj.stock.cost
+            obj.stock.cost = new_cost
             obj.stock.save()
             obj.save()
             return redirect('sales:stock_list')

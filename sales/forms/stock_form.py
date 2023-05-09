@@ -11,4 +11,5 @@ class StockForm(forms.ModelForm):
         widgets = {
             'stock': Select(attrs={'class': 'form-control', 'id': 'stock'}),
             'quantity': TextInput(attrs={'class': 'form-control', 'id': 'quantity', 'type': 'number', 'name': 'quantity'}),
+            'cost': TextInput(attrs={'class': 'form-control', 'id': 'cost', 'type': 'text', 'name': 'cost'}),
         }

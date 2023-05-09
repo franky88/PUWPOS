@@ -22,6 +22,7 @@ class OrderItem(BaseTime):
     products = models.ForeignKey(Product, related_name='order_items', on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
+    money_received = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
         return f'{self.id}'
@@ -29,3 +30,8 @@ class OrderItem(BaseTime):
     @property
     def get_cost(self):
         return self.price * self.quantity
+    
+    @property
+    def get_change(self):
+        change = self.money_received - self.get_cost
+        return change

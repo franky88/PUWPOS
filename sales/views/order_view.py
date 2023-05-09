@@ -10,8 +10,10 @@ def billing_information_view(request):
     customers = Customer.objects.all()
     old_customer = request.GET.get('customer')
     print("old customer", old_customer)
+    # print("money received", money_received)
     if request.method == 'POST':
         form = CustomerForm(request.POST)
+        money_received = request.POST.get('money_received')
         if form.is_valid():
             customer = form.save()
             for item in cart:
@@ -19,7 +21,8 @@ def billing_information_view(request):
                     customer_order = customer,
                     products = item['product'],
                     price = item['price'],
-                    quantity = item['quantity']
+                    quantity = item['quantity'],
+                    money_received = money_received
                 )
                 order.products.quantity -= order.quantity
                 order.products.save()
