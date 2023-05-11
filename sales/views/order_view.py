@@ -13,7 +13,7 @@ def billing_information_view(request):
     # print("money received", money_received)
     if request.method == 'POST':
         form = CustomerForm(request.POST)
-        money_received = request.POST.get('money_received')
+        # money_received = request.POST.get('money_received')
         if form.is_valid():
             customer = form.save()
             for item in cart:
@@ -22,7 +22,7 @@ def billing_information_view(request):
                     products = item['product'],
                     price = item['price'],
                     quantity = item['quantity'],
-                    money_received = money_received
+                    money_received = request.POST.get('money_received')
                 )
                 order.products.quantity -= order.quantity
                 order.products.save()

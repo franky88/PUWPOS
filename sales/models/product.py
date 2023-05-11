@@ -17,7 +17,17 @@ class ProductWarranty(models.Model):
     def item_warranty_duration(self):
         warranty = self.date_purchased.day + self.warranty_duration
         return warranty
+class Category(models.Model):
+    name = models.CharField(max_length=100, default="Memories")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    class Meta:
+        verbose_name = "category"
+        verbose_name_plural = "categories"
 
+    def __str__(self):
+        return self.name
+    
 class Product(BaseTime):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     product_code = models.CharField(max_length=13, unique=True, blank=True)
@@ -25,6 +35,7 @@ class Product(BaseTime):
     name = models.CharField(max_length=255)
     model = models.CharField(max_length=120)
     description = models.TextField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
     cost = models.FloatField(default=0)
     price_margin = models.FloatField(default=0.25)
     price_discount = models.FloatField(default=0.00)
@@ -56,6 +67,11 @@ class Product(BaseTime):
     def total_best_price(self):
         total = self.best_price * self.quantity
         return total
+    
+    @property
+    def discount(self):
+        disc = ((self.price - self.best_price)/self.price)*100
+        return disc
 
 class StockTransaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
