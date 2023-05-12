@@ -3,26 +3,70 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-sm-6">
-        <strong>Product list</strong> | <a href="">Add stock</a>
-        {% for stock in stocks %}
-            <div>
-                <a href="{% url 'sales:cart_add' stock.id %}">{{ stock.stock.name|upper }}</a> <br>
-                <small>QTY {{ stock.quantity }}</small><br>
-                <small>Cost {{ stock.stock.cost }}</small><br>
-                <small>Price {{ stock.stock.price }}</small><br>
-                <small>Disc {{ stock.stock.best_price }}</small><br>
-            </div><hr>
-        {% endfor %}
+    <div class="col-sm-3">
+        <div class="fcard mt-3">
+            <strong>Add stock form</strong>
+        </div>
+        <div class="fcard mt-2">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.as_p }}
+                </div>
+                <input type="submit" value="Add" class="btn btn-outline-primary btn-sm">
+            </form>
+        </div>
+        
     </div>
     <div class="col-sm-6">
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group">
-                {{ form.as_p }}
-            </div>
-            <input type="submit" value="Add" class="btn btn-outline-primary btn-sm">
-        </form>
+        <div class="fcard mt-3">
+            <strong>Stock transactions</strong>
+        </div>
+        <div class="fcard mt-2">
+            <table class="table table-striped table-sm" id="myTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Added QTY</th>
+                        <th>Total QTY</th>
+                        <th>Cost</th>
+                        <th>Price</th>
+                        <th>Best price</th>
+                        <th>Total cost</th>
+                        <th>Inputed by</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in stocks %}
+                    <tr>
+                        <td>{{ stock.stock.name|upper }}</td>
+                        <td>{{ stock.quantity }}</td>
+                        <td>{{ stock.stock.quantity }}</td>
+                        <td>{{ stock.stock.cost }}</td>
+                        <td>{{ stock.stock.price }}</td>
+                        <td>{{ stock.stock.best_price }}</td>
+                        <td>{{ stock.stock.total_cost }}</td>
+                        <td>{{ stock.user|title }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="fcard mt-3">
+            <strong>Transaction histories</strong>
+        </div>
+        <div class="fcard mt-2">
+            {% for stock in stocks %}
+                <div class="fcard">
+                    <strong>{{ stock.stock.name|title }}</strong>
+                    <div class="fcard-footer">
+                        <small class="text-muted">by {{ stock.user }}</small>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 <div>

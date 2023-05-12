@@ -5,16 +5,23 @@
 <div class="row">
     <div class="col-sm-6">
         <strong>Product list</strong> | <a href="">Add product</a>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for product in products %}
-            <div>
-                <a href="{% url 'sales:cart_add' product.id %}">{{ product.name }}</a> <br>
-                <small>{{ product.bar_code|upper }}</small><br>
-                {{ product.price }} <br>
-                {{ product.sub_total }} <br>
-                <small>{{ product.product_code }}</small><br>
-                <h3 class="text-muted">{{ product.quantity }}</h3>
-            </div><hr>
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="{{product.image.image.url}}" class="card-img-top" alt="{{product.image_name}}">
+                <div class="card-body">
+                  <h5 class="card-title">{{ product.name|upper }}</h5>
+                    <p class="card-text">
+                        <strong>PHP {{ product.price }}</strong>
+                    </p>
+                    <a href="#" class="btn btn-outline-info btn-sm">View</a>
+                    <a href="{% url 'sales:cart_add' product.id %}" class="btn btn-outline-primary btn-sm">+ Cart</a>
+                </div>
+            </div>
+        </div>
         {% endfor %}
+        </div>
     </div>
     <div class="col-sm-6">
         <form method="POST" enctype="multipart/form-data">

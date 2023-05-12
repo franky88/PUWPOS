@@ -17,7 +17,8 @@ class ProductWarranty(models.Model):
     def item_warranty_duration(self):
         warranty = self.date_purchased.day + self.warranty_duration
         return warranty
-class Category(models.Model):
+    
+class ProductCategory(models.Model):
     name = models.CharField(max_length=100, default="Memories")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -28,6 +29,14 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
+class ProductImage(BaseTime):
+    image_name = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='product-image/%Y/%m/%d', null=True, blank=True)
+
+    def __str__(self):
+        img = self.image_name
+        return img
+    
 class Product(BaseTime):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     product_code = models.CharField(max_length=13, unique=True, blank=True)
@@ -35,7 +44,7 @@ class Product(BaseTime):
     name = models.CharField(max_length=255)
     model = models.CharField(max_length=120)
     description = models.TextField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
+    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, blank=True, null=True)
     cost = models.FloatField(default=0)
     price_margin = models.FloatField(default=0.25)
     price_discount = models.FloatField(default=0.00)
@@ -43,6 +52,7 @@ class Product(BaseTime):
     quantity = models.PositiveIntegerField(default=1)
     is_serial = models.BooleanField(default=False, verbose_name="with serial?")
     product_warranty = models.ForeignKey(ProductWarranty, on_delete=models.CASCADE, blank=True, null=True)
+    image = models.ForeignKey(ProductImage, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.name

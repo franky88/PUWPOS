@@ -14,13 +14,13 @@ class Cart(object):
 
     def add(self, product, quantity=1, update_quantity=False):
         product_id = str(product.id)
-        # print(update_quantity)
-        if product_id not in self.cart:
-            self.cart[product_id] = {'quantity': 0, 'price': str(product.best_price)}
-        if update_quantity:
-            self.cart[product_id]['quantity'] = quantity
-        else:
-            self.cart[product_id]['quantity'] += quantity
+        if product.quantity > 0:
+            if product_id not in self.cart:
+                self.cart[product_id] = {'quantity': 0, 'price': str(product.best_price)}
+            if update_quantity:
+                self.cart[product_id]['quantity'] = quantity
+            else:
+                self.cart[product_id]['quantity'] += quantity
         self.save()
 
     def save(self):
@@ -41,9 +41,7 @@ class Cart(object):
 
         for item in self.cart.values():
             item['price'] = Decimal(item['price'])
-            # item['money_received'] = Decimal(item['money_received'])
             item['total_price'] = item['price'] * item['quantity']
-            # item['changed'] = item['money_received'] - item['total_price']
             yield item
 
     def __len__(self):
