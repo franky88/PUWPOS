@@ -40,9 +40,11 @@ class StockView(View):
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial=self.initial)
         stocks = StockTransaction.objects.all().order_by('-timestamp')
+        products = Product.objects.all().order_by('-updated_at')
         context = {
             'stocks': stocks,
             'form': form,
+            'products': products
         }
         return render(request, self.template_name, context)
     

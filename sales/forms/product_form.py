@@ -16,9 +16,11 @@ class ProductForm(forms.ModelForm):
             'model': TextInput(attrs={'class': 'form-control', 'id': 'model'}),
             'description': Textarea(attrs={'class': 'form-control', 'id': 'description'}),
             'cost': TextInput(attrs={'class': 'form-control', 'id': 'cost', 'type': 'number'}),
+            'category': Select(attrs={'class': 'form-control', 'id': 'category', 'type': 'select'}),
             'price_margin': TextInput(attrs={'class': 'form-control', 'id': 'price_margin', 'type': 'number'}),
             'price_discount': TextInput(attrs={'class': 'form-control', 'id': 'price_discount', 'type': 'number'}),
             'price': TextInput(attrs={'class': 'form-control', 'id': 'price', 'type': 'number'}),
             'quantity': TextInput(attrs={'class': 'form-control', 'id': 'quantity', 'type': 'number'}),
             'product_warranty': Select(attrs={'class': 'form-control', 'id': 'product_warranty', 'type': 'select'}),
+            'image': Select(attrs={'class': 'form-control', 'id': 'image', 'type': 'select'}),
         }

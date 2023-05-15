@@ -28,14 +28,7 @@ class ProductCategory(models.Model):
 
     def __str__(self):
         return self.name
-    
-class ProductImage(BaseTime):
-    image_name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='product-image/%Y/%m/%d', null=True, blank=True)
 
-    def __str__(self):
-        img = self.image_name
-        return img
     
 class Product(BaseTime):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
@@ -52,10 +45,10 @@ class Product(BaseTime):
     quantity = models.PositiveIntegerField(default=1)
     is_serial = models.BooleanField(default=False, verbose_name="with serial?")
     product_warranty = models.ForeignKey(ProductWarranty, on_delete=models.CASCADE, blank=True, null=True)
-    image = models.ForeignKey(ProductImage, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        name = "%s - %s" % (self.name, self.model)
+        return name
     
     @property
     def sub_total(self):
@@ -83,6 +76,15 @@ class Product(BaseTime):
         disc = ((self.price - self.best_price)/self.price)*100
         return disc
 
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    image_name = models.CharField(max_length=100, blank=True, null=True)
+    image = models.ImageField(upload_to='product-image/%Y/%m/%d', null=True, blank=True)
+
+    def __str__(self):
+        img = self.image_name
+        return img
+
 class StockTransaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     stock = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -91,7 +93,8 @@ class StockTransaction(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.stock.name.title()
+        name = "%s - %s" % (self.stock.name, self.stock.model)
+        return name
     
     @property
     def stock_cost(self):

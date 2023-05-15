@@ -1,6 +1,7 @@
 from sales.models.order import OrderItem, Customer
 from django.shortcuts import render, redirect
 from sales.forms.order_form import CustomerForm
+from sales.forms.sale_form import SaleForm
 from sales.addcart import Cart
 from django.views.generic import ListView
 
@@ -8,9 +9,6 @@ from django.views.generic import ListView
 def billing_information_view(request):
     cart = Cart(request)
     customers = Customer.objects.all()
-    old_customer = request.GET.get('customer')
-    print("old customer", old_customer)
-    # print("money received", money_received)
     if request.method == 'POST':
         form = CustomerForm(request.POST)
         # money_received = request.POST.get('money_received')

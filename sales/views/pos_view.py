@@ -1,12 +1,14 @@
 from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
+from sales.forms.order_form import CustomerForm
 
 from sales.models.product import Product
-from sales.models.order import Customer
+from sales.models.order import Customer, OrderItem
 from sales.addcart import Cart
 
 class POSView(View):
+    template_name = 'pos_view.html'
     def get(self, request):
         products = Product.objects.all()
         customers = Customer.objects.all()
@@ -18,8 +20,7 @@ class POSView(View):
             'cart': cart,
             'customers': customers,
         }
-        template_name = 'pos_view.html'
-        return render(request, template_name, context)
+        return render(request, self.template_name, context)
     
 def cart_add(request, id):
     cart = Cart(request)
