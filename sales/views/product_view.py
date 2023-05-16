@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from sales.forms.product_form import ProductForm
+from sales.forms.product_form import ProductForm, ProductCategoryForm
 from sales.forms.stock_form import StockForm
 from sales.models.product import Product, StockTransaction
 from django.views import View
@@ -11,25 +11,34 @@ from django.urls import reverse_lazy
 class ProductView(View):
     template_name = 'product_list.html'
     form_class = ProductForm
+    category_form_class = ProductCategoryForm
     initial = {'key': 'value'}
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial=self.initial)
+        category_form = self.category_form_class(initial=self.initial)
         products = Product.objects.all().order_by('-updated_at', '-created_at')
         context = {
             'products': products,
             'form': form,
+            'categoryform': category_form
         }
         return render(request, self.template_name, context)
     
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST or None)
+        category_form = self.category_form_class(request.POST or None)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user
             obj.save()
             return redirect('sales:product_list')
+        if category_form.is_valid():
+            obj = category_form.save(commit=False)
+            obj.save()
+            return redirect('sales:product_list')
         context = {
-            "form": form
+            "form": form,
+            "categoryform": category_form
         }
         return render(request, self.template_name, context)
     

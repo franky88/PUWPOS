@@ -19,8 +19,16 @@
     </div>
     <div class="col-sm-9">
         <div class="fcard mt-3">
-            <strong>Product list</strong> | <a href="">Add product</a>
+            <div class="row">
+                <div class="col-sm-4">
+                    <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#productCategory">Add category</button>  <a href="" class="btn btn-outline-primary btn-sm">Add warranty</a>
+                </div>
+            </div>
         </div>
+        <div class="fcard mt-2">
+            <strong>Product list</strong>
+        </div>
+        
         <div class="fcard mt-2">
             <table class="table table-hover table-striped table-sm">
                 <thead>
@@ -38,9 +46,9 @@
                     <tr>
                         <td>{{ product.name|title }}</td>
                         <td>{{ product.quantity }}</td>
-                        <td>{{ product.price }}</td>
-                        <td>{{ product.best_price }}</td>
-                        <td>{{ product.discount }}</td>
+                        <td>{{ product.price|floatformat:2 }}</td>
+                        <td>{{ product.best_price|floatformat:2 }}</td>
+                        <td>{{ product.discount|floatformat:2 }}</td>
                         <td>
                             <a href="#" class="btn btn-outline-info btn-sm">Update</a>
                         </td>
@@ -55,5 +63,33 @@
 </div>
 <div>
 </div>
+
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productCategory">
+    Launch demo modal
+</button> -->
+  
+  <!-- Modal -->
+  <div class="modal fade" id="productCategory" tabindex="-1" aria-labelledby="productCategoryLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="productCategoryLabel">Add category</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        
+        <div class="modal-body">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ categoryform.as_p }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
 {% endblock %}
