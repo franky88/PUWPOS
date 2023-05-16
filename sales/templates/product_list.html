@@ -18,44 +18,36 @@
         </div>
     </div>
     <div class="col-sm-9">
-        <strong>Product list</strong> | <a href="">Add product</a>
-        <div class="fcard">
-            <div class="row row-cols-1 row-cols-md-4 g-4">
-                {% for product in products %}
-                <div class="col">
-                    <div class="card" style="width: 18rem;">
-                        <!-- {% for img in product.productimage_set.all %}
-                            <img src="{{img.image.url}}" class="card-img-top" alt="{{img.image_name}}">
-                        {% endfor %} -->
-                        <div id="carouselExample" class="carousel slide">
-                            <div class="carousel-inner">
-                            {% for img in product.productimage_set.all %}
-                              <div class="carousel-item active">
-                                <img src="{{img.image.url}}" class="d-block w-100" alt="{{img.image_name}}">
-                              </div>
-                            {% endfor %}
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                              <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                              <span class="visually-hidden">Next</span>
-                            </button>
-                        </div>
-                        <div class="card-body">
-                          <h5 class="card-title">{{ product.name|upper }}</h5>
-                            <p class="card-text">
-                                <strong>PHP {{ product.price }}</strong>
-                            </p>
-                            <a href="#" class="btn btn-outline-info btn-sm">View</a>
-                            <a href="{% url 'sales:cart_add' product.id %}" class="btn btn-outline-primary btn-sm">+ Cart</a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
+        <div class="fcard mt-3">
+            <strong>Product list</strong> | <a href="">Add product</a>
+        </div>
+        <div class="fcard mt-2">
+            <table class="table table-hover table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Disc. Price</th>
+                        <th>Disc %</th>
+                        <th>Update</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ product.name|title }}</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.price }}</td>
+                        <td>{{ product.best_price }}</td>
+                        <td>{{ product.discount }}</td>
+                        <td>
+                            <a href="#" class="btn btn-outline-info btn-sm">Update</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
         
     </div>

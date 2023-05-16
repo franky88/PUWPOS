@@ -109,6 +109,3 @@ def product_pre_save(sender, instance, *args, **kwargs):
     if instance.price == 0.00 or instance.price < instance.cost:
         price = float(instance.cost) * (1 + instance.price_margin)
         instance.price = price
-    else:
-        price = float(instance.cost) * (1 + instance.price_margin)
-        instance.price = price
