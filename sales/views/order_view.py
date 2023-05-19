@@ -11,7 +11,6 @@ def billing_information_view(request):
     customers = Customer.objects.all()
     if request.method == 'POST':
         form = CustomerForm(request.POST)
-        # money_received = request.POST.get('money_received')
         if form.is_valid():
             customer = form.save()
             for item in cart:
