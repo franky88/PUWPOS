@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-7">
+        <div class="fcard mb-2 mt-3">
+            <strong>Products</strong>
+        </div>
+        <div class="fcard">
+            <table class="table table-hover table-sm" id="myTable" style="vertical-align: middle;">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Best price</th>
+                        <th>Quantity</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>
+                            <strong>{{ product.name|title }}</strong> <br>
+                            <small class="text-muted"><strong>Bar code:</strong> {{ product.bar_code|upper }}</small>
+                        </td>
+                        <td>{{ product.category }}</td>
+                        <td>{{ product.price }}</td>
+                        <td>{{ product.best_price }}</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>
+                            <a class="btn btn-outline-info btn-sm" href="#">Edit</a>
+                            {% if product.quantity == 0 %}
+                            <a class="btn btn-outline-secondary btn-sm disabled" href="{% url 'sales:cart_add' product.id %}" role="button" aria-disabled="true">+ Cart</a>
+                            {% else %}
+                            <a class="btn btn-outline-success btn-sm" href="{% url 'sales:cart_add' product.id %}">+ Cart</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-sm-5">
+        <div class="fcard mb-2 mt-3">
+            <strong>Cart items</strong> 
+        </div>
+        <div class="fcard mb-2 mt-2">
+            <table class="table table-striped table-sm" style="vertical-align: middle;">
+                <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>SRP</th>
+                    <th>Disc.</th>
+                    <th>% Disc.</th>
+                    <th>QTY</th>
+                    <th>Remove</th>
+                </tr>
+                <tr>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart %}
+                        {% with product=item.product %}
+                        <tr>
+                            <td>
+                                {{ product.name }} <br>
+                            </td>
+                            <td>{{ product.price }}</td>
+                            <td>{{ product.best_price }}</td>
+                            <td>{{ product.discount|floatformat:2 }} %</td>
+                            <td>
+                                <form action="{% url 'sales:cart_updated' product.id %}" method="post">
+                                    {% csrf_token %}
+                                    <div class="input-group">
+                                        <input style="width: 40px;" value="{{ item.update_quantity_form.quantity }}" min="1" type="number" name="number" class="form-control form-control-sm" placeholder="Quantity" aria-label="quantity" aria-describedby="button-addon2">
+                                        <button class="btn btn-outline-success btn-sm" type="submit" id="button-addon2">Update</button>
+                                    </div>
+                                </form>
+                            </td>
+                            <td>
+                                <a href="{% url 'sales:cart_remove' product.id %}" title="cancel" class="icon">Remove</a>
+                            </td>
+                            
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                {% if product.is_serial %}
+                                    <input class="form-control form-control-sm" type="text" placeholder="Serial number">
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endwith %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="fcard mb-2 mt-3">
+            <!-- <div class="row">
+                <div class="col-sm-12">
+                    <div class="fcard mt-2">
+                        <form action="{% url 'sales:pos_view' %}" class="form" enctype="multipart/form-data" method="GET">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                
+                                <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+                                    <option selected>Choose...</option>
+                                    {% for customer in customers %}
+                                    <option value="{{ customer }}" name="{{ customer }}">{{ customer }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button class="btn btn-outline-secondary" type="submit">Button</button>
+                                
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> -->
+            <div class="row">
+                <div class="col-sm-6">
+                    <!-- <form action="{% url 'sales:pos_view' %}" class="form" enctype="multipart/form-data" method="POST">
+                        {% csrf_token %}
+                        <select class="form-select form-select-sm" aria-label="Default select example">
+                            {% for customer in customers %}
+                            <option value="{{ customer }}" name="{{ customer }}">{{ customer }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" value="Submit">
+                    </form> -->
+                    <strong class="float-left">Net Total: PHP {{ cart.get_total_price }}</strong>
+                </div>
+                <div class="col-md-6">
+                    <div style="text-align: right;">
+                        {% if cart %}
+                        <a class="btn btn-primary btn-sm" href="{% url 'sales:billing_information' %}">Confirm Payment</a>
+                        {% else %}
+                        <a href="#" class="btn btn-secondary btn-sm disabled" role="button" aria-disabled="true">Confirm Payment</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %}
