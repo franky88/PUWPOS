@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from sales.forms.product_form import ProductForm, ProductCategoryForm
 from sales.forms.stock_form import StockForm
 from sales.models.product import Product, StockTransaction, ProductCategory
+from sales.addcart import Cart
 from django.views import View
 from sales.stocktransaction import Stock
 from django.views.generic import CreateView
@@ -43,7 +44,13 @@ class ProductView(View):
             "categoryform": category_form
         }
         return render(request, self.template_name, context)
-    
+
+def add_to_cart(request, id):
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=id)
+    cart.add(product=product, quantity=1, update_quantity=True)
+    return redirect('sales:product_list')
+
 class StockView(View):
     template_name = 'stock/stock_list.html'
     form_class = StockForm

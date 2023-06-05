@@ -44,6 +44,11 @@
                 PHP {{ cart.get_total_price }} 
             </h2>
         </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="fcard mt-3">
+            <strong class="box-title">Confirm Order</strong>
+        </div>
         <div class="fcard mt-2">
             <form action="sales:billing_information" class="form" method="POST">
                 {% csrf_token %}
@@ -55,66 +60,37 @@
                 <button type="submit">Select</button>
             </form>
         </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-6">
-        <div class="row">
-            <div class="col-sm-12">
-                <h3 class="box-title">Default Customer</h3>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-8" style="text-align: right;">
-                <form action="sales:billing_information" class="form" method="POST">
-                    {% csrf_token %}
-                    <select class="form-select form-select-sm" aria-label="Default select example">
-                        {% for customer in customers %}
-                        <option value="{{ customer }}" name="{{ customer }}">{{ customer }}</option>
-                        {% endfor %}
-                    </select>
-                    <button type="submit">Select</button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6">
-        <div class="box">
-            <div class="box-header">
-                <h4 class="box-title">Confirm Order</h4>
-            </div>
-            <div class="box-body">
-                <form method="POST" action="{% url 'sales:billing_information' %}" class="register-form"
-                role="form">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label class="info-title" for="exampleInputEmail1">Your Full Name</label>
-                        {{ form.full_name }}
-                    </div>
-                    <div class="form-group">
-                        <label class="info-title" for="exampleInputEmail1">Email Address</label>
-                        {{ form.email }}
-                    </div>
-                    <div class="form-group">
-                        <label class="info-title" for="exampleInputEmail1">Your Phone Number</label>
-                        {{ form.number }}
-                    </div>
-                    <div class="form-group">
-                        <label class="info-title" for="exampleInputEmail1">Your Address</label>
-                        {{ form.address }}
-                    </div>
-                    <div>
-                        <h3>
-                            Total PHP {{cart.get_total_price}}
-                        </h3>
-                        <input type="number" name="money_received" placeholder="Amount">
-                    </div>
-                    
-                    <button type="submit"
-                            class="btn-upper btn btn-primary checkout-page-button">Confirm Order
-                    </button>
-                </form>
-            </div>
+        <div class="fcard mt-2">
+            <form method="POST" action="{% url 'sales:billing_information' %}" class="register-form"
+            role="form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="info-title" for="exampleInputEmail1">Your Full Name</label>
+                    {{ form.full_name }}
+                </div>
+                <div class="form-group">
+                    <label class="info-title" for="exampleInputEmail1">Email Address</label>
+                    {{ form.email }}
+                </div>
+                <div class="form-group">
+                    <label class="info-title" for="exampleInputEmail1">Your Phone Number</label>
+                    {{ form.number }}
+                </div>
+                <div class="form-group">
+                    <label class="info-title" for="exampleInputEmail1">Your Address</label>
+                    {{ form.address }}
+                </div>
+                <div>
+                    <h3>
+                        Total PHP {{cart.get_total_price}}
+                    </h3>
+                    <input type="number" name="money_received" placeholder="Amount">
+                </div>
+                
+                <button type="submit"
+                        class="btn-upper btn btn-primary checkout-page-button">Confirm Order
+                </button>
+            </form>
         </div>
     </div>
 </div>

@@ -20,7 +20,6 @@
                     {% for cat in categories %}
                     <div>
                         <a href="">{{ cat.name|title }}</a>
-                        <span class="float-end">5</span>
                     </div>
                     {% endfor %}
                 </div>
@@ -53,7 +52,7 @@
                                 <td>{{ product.discount|floatformat:2 }}</td>
                                 <td>
                                     <a href="#" class="btn btn-outline-info btn-sm">Update</a>
-                                    <a href="{% url 'sales:cart_add' product.id %}" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-plus"></i> Cart</a>
+                                    <a href="{% url 'sales:add_to_cart' product.id %}" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-plus"></i> Cart</a>
                                 </td>
                             </tr>
                             {% endfor %}

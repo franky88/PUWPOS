@@ -35,6 +35,11 @@ def cart_remove(request, id):
     cart.remove(product)
     return redirect('sales:pos_view')
 
+def cart_clear(request):
+    cart = Cart(request)
+    cart.clear()
+    return redirect('sales:pos_view')
+
 @require_POST
 def cart_updated(request, id):
     number = None

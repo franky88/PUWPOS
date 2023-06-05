@@ -8,7 +8,7 @@ from django.views.generic import ListView
 
 def billing_information_view(request):
     cart = Cart(request)
-    customers = Customer.objects.all()
+    customers = Customer.objects.all().order_by('-created_at')
     if request.method == 'POST':
         form = CustomerForm(request.POST)
         if form.is_valid():
@@ -29,7 +29,6 @@ def billing_information_view(request):
     else:
         form = CustomerForm()
     return render(request, 'pos/billing_information.html', {'form': form, 'cart': cart, 'customers': customers})
-
 
 class OrderItemView(ListView):
     template_name = 'pos/order_list.html'
