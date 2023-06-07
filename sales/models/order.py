@@ -9,6 +9,8 @@ class Customer(BaseTime):
     number = models.CharField(max_length=14, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     address = models.CharField(max_length=150, blank=True, null=True)
+    class Meta:
+        ordering = ('-created_at',)
 
     def __str__(self):
         return f'{self.full_name} {self.id} {self.number}'

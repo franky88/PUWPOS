@@ -51,7 +51,7 @@
                 {% if cart %}
                 <a href="{% url 'sales:clear_cart' %}" class="btn btn-outline-danger btn-sm float-end">Clear cart</a>
                 {% else %}
-                <a href="{% url 'sales:clear_cart' %}" class="btn btn-outline-danger btn-sm float-end disabled" aria-disabled="true">Clear cart</a>
+                <a href="{% url 'sales:clear_cart' %}" class="btn btn-outline-secondary btn-sm float-end disabled" aria-disabled="true">Clear cart</a>
                 {% endif %}
             </div>
         </div>
