@@ -15,6 +15,8 @@ class ProductView(View):
     category_form_class = ProductCategoryForm
     initial = {'key': 'value'}
     def get(self, request, *args, **kwargs):
+        cart = Cart(request)
+        cart_items = cart.__len__()
         form = self.form_class(initial=self.initial)
         category_form = self.category_form_class(initial=self.initial)
         products = Product.objects.all().order_by('-updated_at', '-created_at')
@@ -24,6 +26,7 @@ class ProductView(View):
             'form': form,
             'categoryform': category_form,
             'categories': categories,
+            'cart_items': cart_items
         }
         return render(request, self.template_name, context)
     
@@ -56,13 +59,16 @@ class StockView(View):
     form_class = StockForm
     initial = {'key': 'value'}
     def get(self, request, *args, **kwargs):
+        cart = Cart(request)
+        cart_items = cart.__len__()
         form = self.form_class(initial=self.initial)
         stocks = StockTransaction.objects.all().order_by('-timestamp')[:5]
         products = Product.objects.all().order_by('-updated_at')
         context = {
             'stocks': stocks,
             'form': form,
-            'products': products
+            'products': products,
+            'cart_items': cart_items
         }
         return render(request, self.template_name, context)
     

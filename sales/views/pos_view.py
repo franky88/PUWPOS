@@ -13,6 +13,7 @@ class POSView(View):
         products = Product.objects.all()
         customers = Customer.objects.all()
         cart = Cart(request)
+        cart_items = cart.__len__()
         for item in cart:
             item['update_quantity_form'] = {'quantity': item['quantity'], 'update': True}
         context = {
@@ -20,6 +21,7 @@ class POSView(View):
             'products': products,
             'cart': cart,
             'customers': customers,
+            'cart_items': cart_items
         }
         return render(request, self.template_name, context)
     

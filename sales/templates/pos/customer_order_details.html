@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="fcard mt-3">
+            <strong>{{ title|title }}</strong>
+        </div>
+        <div class="fcard mt-2">
+            <strong>Name: {{ customer.full_name|title }}</strong>
+            <hr>
+            {% for order in orders %}
+                {{ order.products.name }}
+                {{ order.money_received }} <br>
+            {% endfor %}
+            <!-- {% for item in customer.orderitem_set.all %}
+                
+                {{ item.products.name|title }} {{ item.money_received }} {{ item.get_change }}<br>
+                {% for product in item.products_set.all %}
+                    {{ product }}
+                {% endfor %}
+            {% endfor %} -->
+        </div>
+    </div>
+</div>
+{% endblock %}
