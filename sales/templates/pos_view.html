@@ -31,7 +31,7 @@
                         <td>{{ product.best_price }}</td>
                         <td>{{ product.quantity }}</td>
                         <td>
-                            <a class="btn btn-outline-info btn-sm" href="#">Edit</a>
+                            <a class="btn btn-outline-info btn-sm" href="{% url 'sales:product_update' product.id %}">Edit</a>
                             {% if product.quantity == 0 %}
                             <a class="btn btn-outline-secondary btn-sm disabled" href="{% url 'sales:cart_add' product.id %}" role="button" aria-disabled="true">+ Cart</a>
                             {% else %}

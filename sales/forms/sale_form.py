@@ -7,9 +7,9 @@ class SaleForm(ModelForm):
     class Meta:
         model = OrderItem
         fields = '__all__'
-        exclude = ['products', 'quantity', 'price', 'money_received']
+        exclude = ['order_id','products', 'quantity', 'price',]
 
         widgets = {
             'customer': Select(attrs={'class': 'form-control', 'id': 'customer'}),
-            # 'money_received': NumberInput(attrs={'class': 'form-control', 'id': 'money_received', 'type': 'number'}),
+            'money_tender': NumberInput(attrs={'class': 'form-control', 'id': 'money_tender', 'type': 'number'}),
         }

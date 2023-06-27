@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="fcard mt-3">
+            <strong>Product details</strong>
+            <table class="table table-stripe table-sm">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Model</th>
+                        <th>Quantity</th>
+                        <th>SRP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ instance.name|title }}</td>
+                        <td>{{ instance.model|upper }}</td>
+                        <td>{{ instance.quantity }}</td>
+                        <td>{{ instance.best_price }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="fcard mt-2">
+            <strong>Update</strong>
+            <form action="" class="form" method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" class="btn btn-outline-primary btn-sm" value="Update">
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

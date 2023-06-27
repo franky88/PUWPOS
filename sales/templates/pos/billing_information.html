@@ -47,13 +47,18 @@
     </div>
     <div class="col-sm-6">
         <div class="fcard mt-3">
-            <strong class="box-title">Confirm Order</strong>
+            <div>
+                <strong class="box-title">Confirm Order</strong>
+                <a type="button" class="btn btn-outline-primary btn-sm float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class="fa-solid fa-plus"></i> Customer
+                </a>
+            </div>
         </div>
         <div class="fcard mt-2">
             <form action="{% url 'sales:billing_information' %}" class="form" method="POST">
                 {% csrf_token %}
                 {{ sale_form.as_p }}
-                <input type="number" name="money_received" placeholder="Amount">
+                <!-- <input type="number" name="money_tender" placeholder="Amount"> -->
                 <button type="submit" class="btn-upper btn btn-primary checkout-page-button">Confirm Order</button>
             </form>
         </div>
@@ -87,6 +92,28 @@
                 <button type="submit" class="btn-upper btn btn-primary checkout-page-button">Confirm Order</button>
             </form>
         </div> -->
+    </div>
+</div>
+  
+  <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+        <div class="modal-body">
+          {{ customer_form.as_p }} sample
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary btn-sm">Save changes</button>
+        </div>
+        </form>
+      </div>
     </div>
 </div>
 

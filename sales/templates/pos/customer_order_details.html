@@ -9,9 +9,9 @@
         <div class="fcard mt-2">
             <strong>Name: {{ customer.full_name|title }}</strong>
             <hr>
+            {{ orders.money_tender }}
             {% for order in orders %}
-                {{ order.products.name }}
-                {{ order.money_received }} <br>
+                {{ order.order_id }} {{ order.products.name }} {{ order.money_received }} {{ order.quantity }} {{ order.get_cost }} {{ order.money_tender }} {{ order.get_change }}<br>
             {% endfor %}
             <!-- {% for item in customer.orderitem_set.all %}
                 

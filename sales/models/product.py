@@ -4,6 +4,8 @@ from sales.models.base import BaseTime
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
+from import_export import resources
+
 
 class ProductWarranty(models.Model):
     name = models.CharField(max_length=100, default="6 months")
@@ -29,7 +31,6 @@ class ProductCategory(models.Model):
     def __str__(self):
         return self.name
 
-    
 class Product(BaseTime):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     product_code = models.CharField(max_length=13, unique=True, blank=True)
@@ -76,6 +77,7 @@ class Product(BaseTime):
         disc = ((self.price - self.best_price)/self.price)*100
         return disc
 
+
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     image_name = models.CharField(max_length=100, blank=True, null=True)
@@ -100,6 +102,13 @@ class StockTransaction(models.Model):
     def stock_cost(self):
         cost = self.quantity * self.cost
         return cost
+
+# class ProductResource(resources.ModelResource):
+#     class Meta:
+#         model = Product
+#         import_id_fields = ["bar_code", "name", "model", "description", "category", "cost", "price_margin", "price_discount", "price", "quantity", "is_serial", "product_warranty"]
+#         skip_unchanged = True
+#         use_bulk = True
 
 @receiver(pre_save, sender=Product)
 def product_pre_save(sender, instance, *args, **kwargs):

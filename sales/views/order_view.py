@@ -1,4 +1,4 @@
-from sales.models.order import OrderItem, Customer, Order
+from sales.models.order import OrderItem, Customer
 from sales.models.product import Product
 from django.shortcuts import render, redirect, get_object_or_404
 from sales.forms.order_form import CustomerForm
@@ -8,36 +8,70 @@ from django.views.generic import ListView
 from django.views import View
 import uuid
 
-def billing_information_view(request):
-    cart = Cart(request)
-    cart_items = cart.__len__()
-    customers = Customer.objects.all().order_by('-created_at')
-    sale_form = SaleForm(request.POST or None)
-    uuid_code = str(uuid.uuid4()).replace("-", "").upper()[:12]
-    if request.method == 'POST':
-        form = CustomerForm(request.POST)
+
+class OrderInformationView(View):
+    customer_form = CustomerForm
+    sale_form = SaleForm
+    template_name = 'pos/billing_information.html'
+    initial = {'key': 'value'}
+    def get(self, request, *args, **kwargs):
+        customers = Customer.objects.all().order_by('-created_at')
+        cart = Cart(request)
+        cart_items = cart.__len__()
+        form = self.sale_form(initial=self.initial)
+        customer_form = self.customer_form(initial=self.initial)
+        context = {
+            'form': form,
+            'cart': cart,
+            'customers': customers,
+            'customer_form': customer_form,
+            'sale_form': self.sale_form,
+            'cart_items': cart_items
+        }
+        return render(request, self.template_name, context)
+    def post(self, request):
+        cart = Cart(request)
+        sale_form = self.sale_form(request.POST or None)
+        customer_form = self.customer_form(request.POST or None)
         if sale_form.is_valid():
-            sale_obj = sale_form.save(commit=False)
             for item in cart:
+                sale_obj = sale_form.save(commit=False)
                 order = OrderItem(
-                    customer_order = sale_obj.customer_order,
+                    customer = sale_obj.customer,
                     products = item['product'],
                     price = item['price'],
                     quantity = item['quantity'],
-                    money_received = request.POST.get('money_received')
+                    money_tender = sale_obj.money_tender,
                 )
                 order.products.quantity -= order.quantity
                 order.products.save()
                 order.save()
             cart.clear()
             return redirect('sales:pos_view')
+        if customer_form.is_valid():
+            obj = customer_form.save(commit=False)
+            obj.save()
+            return redirect('sales:billing_information')
+
+def add_customer(request):
+    customer_form = CustomerForm(request.POST or None)
+    if request.method == 'POST':
+        if customer_form.is_valid():
+            obj = customer_form.save(commit=False)
+            obj.save()
+            return redirect('sales:pos_view')
     else:
-        form = CustomerForm()
-    return render(request, 'pos/billing_information.html', {'form': form, 'cart': cart, 'customers': customers, 'sale_form': sale_form, 'cart_items': cart_items})
+        customer_form = CustomerForm()
+    context = {
+        "title": "add customer",
+        "customer_form": customer_form,
+    }
+    return render(request, 'pos/billing_information.html', context)
+
 
 def customer_order_details(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
-    orders = Order.objects.filter(customer=customer)
+    orders = OrderItem.objects.filter(customer=customer)
     context = {
         "title": "customer order details",
         "customer": customer,

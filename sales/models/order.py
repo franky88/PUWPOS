@@ -2,6 +2,9 @@ from django.db import models
 
 from sales.models.base import BaseTime
 from sales.models.product import Product
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
+import uuid
 
 
 class Customer(models.Model):
@@ -20,20 +23,13 @@ class Customer(models.Model):
     def get_total_cost(self):
         return sum(item.get_cost() for item in self.items.all())
 
-class Order(BaseTime):
+class OrderItem(models.Model):
     order_id = models.CharField(max_length=8, unique=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    money_received = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-
-    def __str__(self):
-        return self.customer.full_name
-
-class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
     products = models.ForeignKey(Product, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
-    money_received = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    money_tender = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
         return f'{self.id}'
@@ -44,5 +40,12 @@ class OrderItem(models.Model):
     
     @property
     def get_change(self):
-        change = self.money_received - self.get_cost
+        change = self.money_tender - self.get_cost
         return change
+    
+@receiver(post_save, sender=OrderItem)
+def order_pro_save(sender, instance, created, *args, **kwargs):
+    if created:
+        uuid_code = str(uuid.uuid4()).replace("-", "").upper()[:8]
+        instance.order_id = uuid_code
+        instance.save()

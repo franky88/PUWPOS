@@ -51,7 +51,7 @@
                                 <td>{{ product.best_price|floatformat:2 }}</td>
                                 <td>{{ product.discount|floatformat:2 }}</td>
                                 <td>
-                                    <a href="#" class="btn btn-outline-info btn-sm">Update</a>
+                                    <a href="{% url 'sales:product_update' product.id %}" class="btn btn-outline-info btn-sm">Update</a>
                                     <a href="{% url 'sales:add_to_cart' product.id %}" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-plus"></i> Cart</a>
                                 </td>
                             </tr>

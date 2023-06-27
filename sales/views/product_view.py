@@ -7,7 +7,8 @@ from django.views import View
 from sales.stocktransaction import Stock
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
-
+import pandas as pd
+from tablib import Dataset
 
 class ProductView(View):
     template_name = 'product_list.html'
@@ -15,6 +16,7 @@ class ProductView(View):
     category_form_class = ProductCategoryForm
     initial = {'key': 'value'}
     def get(self, request, *args, **kwargs):
+        print("kwargs", **kwargs)
         cart = Cart(request)
         cart_items = cart.__len__()
         form = self.form_class(initial=self.initial)
@@ -33,6 +35,7 @@ class ProductView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST or None)
         category_form = self.category_form_class(request.POST or None)
+
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user
@@ -47,6 +50,58 @@ class ProductView(View):
             "categoryform": category_form
         }
         return render(request, self.template_name, context)
+
+
+class ProductUpdateView(View):
+    template_name = 'product_update.html'
+    form_class = ProductForm
+    initial = {'key': 'value'}
+    def get(self, request, *args, **kwargs):
+        product_id = kwargs.get('product_id')
+        product = get_object_or_404(Product, pk=product_id)
+        form = self.form_class(request.POST or None, instance=product)
+        context = {
+            "form": form,
+            "instance": product,
+        }
+        return render(request, self.template_name, context)
+    def post(self, request, *args, **kwargs):
+        product_id = kwargs.get('product_id')
+        product = get_object_or_404(Product, pk=product_id)
+        form = self.form_class(request.POST or None, instance=product)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
+            return redirect('sales:product_update', product.id)
+        context = {
+            "form": form,
+            "instance": product,
+        }
+        return render(request, self.template_name, context)
+
+
+
+# def import_product_data(request):
+#     if request.method == 'POST':
+#         file = request.FILES['excel']
+#         df = pd.read_excel(file)
+#         rename_columns = {
+#             "bar_code": "bar_code", "name": "name", "model": "model", "description": "description",\
+#             "category": "category", "cost": "cost", "price_margin": "price_margin",\
+#             "price_discount": "price_discount", "price": "price", "quantity": "quantity",\
+#             "is_serial": "is_serial", "product_warranty": "product_warranty"
+#             }
+#         df.rename(columns = rename_columns, inplace=True)
+#         product_resource = ProductResource()
+#         dataset = Dataset().load(df)
+#         result = product_resource.import_data(dataset, dry_run=True, raise_errors=True)
+
+#         if not result.has_errors():
+#             result = product_resource.import_data(dataset, dry_run=False)
+#             return redirect("sales:product_list")
+        
+#     return redirect("sales:product_list")
 
 def add_to_cart(request, id):
     cart = Cart(request)
