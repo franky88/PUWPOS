@@ -74,8 +74,9 @@ class Product(BaseTime):
     
     @property
     def discount(self):
-        disc = ((self.price - self.best_price)/self.price)*100
-        return disc
+        if not self.price - self.best_price == 0:
+            disc = ((self.price - self.best_price)/self.price)*100
+            return disc
 
 
 class ProductImage(models.Model):

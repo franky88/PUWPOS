@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from sales.forms.product_form import ProductForm, ProductCategoryForm
 from sales.forms.stock_form import StockForm
 from sales.models.product import Product, StockTransaction, ProductCategory
@@ -9,6 +9,8 @@ from django.views.generic import CreateView
 from django.urls import reverse_lazy
 import pandas as pd
 from tablib import Dataset
+from import_export import resources
+from sales.admin import ProductResource
 
 class ProductView(View):
     template_name = 'product_list.html'
@@ -80,8 +82,17 @@ class ProductUpdateView(View):
         }
         return render(request, self.template_name, context)
 
+def importProduct(request):
+    product_resource = resources.modelresource_factory(model=Product)()
+    dataset = Dataset(['', 'New book'], headers=['id', 'name'])
+    result = product_resource.import_data(dataset, dry_run=False)
+    return HttpResponse(result)
 
-
+def exportProduct(request):
+    dataset = ProductResource().export()
+    print(dataset.csv)
+    # return redirect('sales:product_list')
+    return HttpResponse(dataset.csv)
 # def import_product_data(request):
 #     if request.method == 'POST':
 #         file = request.FILES['excel']
