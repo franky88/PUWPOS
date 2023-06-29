@@ -45,6 +45,7 @@ class Product(BaseTime):
     price = models.FloatField(default=0.00, verbose_name="SRP")
     quantity = models.PositiveIntegerField(default=1)
     is_serial = models.BooleanField(default=False, verbose_name="with serial?")
+    out_of_stock = models.BooleanField(default=False)
     product_warranty = models.ForeignKey(ProductWarranty, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
@@ -119,3 +120,7 @@ def product_pre_save(sender, instance, *args, **kwargs):
     if instance.price == 0.00 or instance.price < instance.cost:
         price = float(instance.cost) * (1 + instance.price_margin)
         instance.price = price
+    if instance.quantity <= 1:
+        instance.out_of_stock = True
+    else:
+        instance.out_of_stock = False

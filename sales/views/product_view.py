@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
-from sales.forms.product_form import ProductForm, ProductCategoryForm
+from sales.forms.product_form import ProductForm, ProductCategoryForm, ProductFormat
 from sales.forms.stock_form import StockForm
 from sales.models.product import Product, StockTransaction, ProductCategory
 from sales.addcart import Cart
@@ -12,15 +12,47 @@ from tablib import Dataset
 from import_export import resources
 from sales.admin import ProductResource
 
+
+class ProductImportExport(View):
+    template_name = 'product_list.html'
+    initial = {'key': 'value'}
+
+    def get(self, request):
+        
+        format_form = ProductFormat(initial=self.initial)
+        context = {
+            'format_form': format_form
+        }
+        return render(request, self.template_name, context)
+    
+    def post(self, request):
+        qs = Product.objects.all()
+        dataset = ProductResource().export(qs)
+        format = request.POST.get('format')
+        name = request.POST.get('name')
+        print(format)
+        if format == 'xls':
+            ds = dataset.xls
+        elif format == 'csv':
+            ds = dataset.csv
+        else:
+            ds = dataset.json
+        
+        response = HttpResponse(ds, content_type = f'{format}')
+        response["Content-Disposition"] = f"attachment; filename={name}.{format}"
+        return response
+    
+
 class ProductView(View):
     template_name = 'product_list.html'
     form_class = ProductForm
     category_form_class = ProductCategoryForm
     initial = {'key': 'value'}
     def get(self, request, *args, **kwargs):
-        print("kwargs", **kwargs)
+        qs = Product.objects.all()
         cart = Cart(request)
         cart_items = cart.__len__()
+        format_form = ProductFormat(initial=self.initial)
         form = self.form_class(initial=self.initial)
         category_form = self.category_form_class(initial=self.initial)
         products = Product.objects.all().order_by('-updated_at', '-created_at')
@@ -30,11 +62,30 @@ class ProductView(View):
             'form': form,
             'categoryform': category_form,
             'categories': categories,
-            'cart_items': cart_items
+            'cart_items': cart_items,
+            'format_form': format_form
         }
         return render(request, self.template_name, context)
     
     def post(self, request, *args, **kwargs):
+
+        # export products
+        # qs = Product.objects.all()
+        # dataset = ProductResource().export(qs)
+        # format = request.POST.get('format')
+        # print(format)
+        # if format == 'xls':
+        #     ds = dataset.xls
+        # elif format == 'csv':
+        #     ds = dataset.csv
+        # else:
+        #     ds = dataset.json
+        
+        # response = HttpResponse(ds, content_type = f'{format}')
+        # response["Content-Disposition"] = f"attachment; filename=products.{format}"
+        # return response
+
+        # create products
         form = self.form_class(request.POST or None)
         category_form = self.category_form_class(request.POST or None)
 
@@ -90,7 +141,7 @@ def importProduct(request):
 
 def exportProduct(request):
     dataset = ProductResource().export()
-    print(dataset.csv)
+    print(dataset)
     # return redirect('sales:product_list')
     return HttpResponse(dataset.csv)
 # def import_product_data(request):

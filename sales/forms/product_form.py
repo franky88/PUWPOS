@@ -33,3 +33,13 @@ class ProductCategoryForm(forms.ModelForm):
         widgets = {
             'name': TextInput(attrs={'class': 'form-control', 'id': 'category-name'})
         }
+
+FORMAT_CHOICES = (
+    ('xls', 'xls'),
+    ('csv', 'csv'),
+    ('json', 'json'),
+)
+
+class ProductFormat(forms.Form):
+    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    format = forms.ChoiceField(choices=FORMAT_CHOICES, widget=forms.Select(attrs={'class': 'form-select'}))
