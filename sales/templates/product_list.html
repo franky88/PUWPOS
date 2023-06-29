@@ -5,69 +5,79 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="fcard mt-3">
-            <div class="row">
-                <div class="col-sm-12">
-                    <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#addProduct"><i class="fa-solid fa-plus"></i> Product</button> <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#productCategory"><i class="fa-solid fa-plus"></i> Category</button>  <a href="" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-plus"></i> Warranty</a>
+            <div class="fcard-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#addProduct"><i class="fa-solid fa-plus"></i> Product</button> <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#productCategory"><i class="fa-solid fa-plus"></i> Category</button>  <a href="" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-plus"></i> Warranty</a>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-3">
                 <div class="fcard mt-2">
-                    <strong>Categories</strong>
+                    <strong class="fcard-title"><i class="fa-solid fa-cube"></i> Categories</strong>
                 </div>
                 <div class="fcard mt-2">
-                    {% for cat in categories %}
-                    <div>
-                        <a href="">{{ cat.name|title }}</a>
+                    <div class="fcard-body">
+                        {% for cat in categories %}
+                        <div>
+                            <a href="">{{ cat.name|title }}</a>
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
+                    
                 </div>
             </div>
             <div class="col-sm-9">
                 <div class="fcard mt-2">
                     <div class="d-flex justify-content-between">
-                        <strong>Product list</strong>
-                        <div class="d-flex justify-content-end gap-3">
-                            <a href="" class="btn btn-outline-primary btn-sm float-end"><i class="fa-solid fa-file-import"></i> import</a>
-                            <button type="button" class="btn btn-outline-primary btn-sm float-end" data-bs-toggle="modal" data-bs-target="#dataFormat"><i class="fa-solid fa-file-export"></i> export</button>
+                        <strong class="fcard-title"><i class="fa-solid fa-list"></i> Product list</strong>
+                        <div class="fcard-body">
+                            <div class="d-flex justify-content-end gap-3">
+                                <a href="" class="float-end"><i class="fa-solid fa-file-import"></i> import</a>
+                                <a type="button" class="float-end" data-bs-toggle="modal" data-bs-target="#dataFormat"><i class="fa-solid fa-file-export"></i> export</a>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="fcard mt-2">
-                    <table class="table table-hover table-striped table-sm" id="myTable">
-                        <thead>
-                            <tr>
-                                <th>Bar code</th>
-                                <th>Name</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                <th>Disc. Price</th>
-                                <th>Disc %</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for product in products %}
-                            <tr>
-                                <td>{{ product.bar_code|upper }}</td>
-                                <td>{{ product.name|title }}</td>
-                                <td>{{ product.quantity }}</td>
-                                <td>{{ product.price|floatformat:2 }}</td>
-                                <td>{{ product.best_price|floatformat:2 }}</td>
-                                <td>{{ product.discount|floatformat:2 }}</td>
-                                <td>
-                                    <a href="{% url 'sales:product_update' product.id %}" class="btn btn-outline-info btn-sm">Update</a>
-                                    {% if product.out_of_stock %}
-                                    <a href="{% url 'sales:add_to_cart' product.id %}" class="btn btn-outline-secondary btn-sm disabled" role="button" aria-disabled="true"><i class="fa-solid fa-plus"></i> Cart</a>
-                                    {% else %}
-                                    <a href="{% url 'sales:add_to_cart' product.id %}" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-plus"></i> Cart</a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                    <div class="fcard-body">
+                        <table class="table table-hover table-striped table-sm" id="myTable">
+                            <thead>
+                                <tr>
+                                    <th>Bar code</th>
+                                    <th>Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Disc. Price</th>
+                                    <th>Disc %</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in products %}
+                                <tr>
+                                    <td>{{ product.bar_code|upper }}</td>
+                                    <td>{{ product.name|title }}</td>
+                                    <td>{{ product.quantity }}</td>
+                                    <td>{{ product.price|floatformat:2 }}</td>
+                                    <td>{{ product.best_price|floatformat:2 }}</td>
+                                    <td>{{ product.discount|floatformat:2 }}</td>
+                                    <td>
+                                        <a href="{% url 'sales:product_update' product.id %}" class="btn btn-outline-info btn-sm">Update</a>
+                                        {% if product.out_of_stock %}
+                                        <a href="{% url 'sales:add_to_cart' product.id %}" class="btn btn-outline-secondary btn-sm disabled" role="button" aria-disabled="true"><i class="fa-solid fa-plus"></i> Cart</a>
+                                        {% else %}
+                                        <a href="{% url 'sales:add_to_cart' product.id %}" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-plus"></i> Cart</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
                 </div>
             </div>
         </div>

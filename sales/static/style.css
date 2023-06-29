@@ -3,8 +3,16 @@
     flex-direction: column;
     justify-content: flex-start;
     gap: .5rem;
-    border-radius: .7rem;
+    /* border-radius: .7rem; */
     box-shadow: 0 0 3rem 0 rgba(0, 0, 0,.1);
+    /* padding: .5rem; */
+}
+.fcard-title {
+    border-left: .5rem solid #3f91ee;
+    margin-left: 0;
+    padding: .5rem 0 .5rem 1rem;
+}
+.fcard-body {
     padding: .5rem;
 }
 .fcard-footer {
