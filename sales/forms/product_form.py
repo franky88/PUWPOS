@@ -43,3 +43,8 @@ FORMAT_CHOICES = (
 class ProductFormat(forms.Form):
     name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     format = forms.ChoiceField(choices=FORMAT_CHOICES, widget=forms.Select(attrs={'class': 'form-select'}))
+
+class ProductFormatImport(forms.Form):
+    file = forms.FileField(widget=FileInput(attrs={"class": "form-control"}))
+    name = forms.CharField(widget=TextInput(attrs={"class": "form-control"}))
+    # file = forms.FileField(widget=forms.FileInput(attrs={'class': 'form-control'}))

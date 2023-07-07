@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
-from sales.forms.product_form import ProductForm, ProductCategoryForm, ProductFormat
+from sales.forms.product_form import ProductForm, ProductCategoryForm, ProductFormat, ProductFormatImport
 from sales.forms.stock_form import StockForm
 from sales.models.product import Product, StockTransaction, ProductCategory
 from sales.addcart import Cart
@@ -11,8 +11,28 @@ import pandas as pd
 from tablib import Dataset
 from import_export import resources
 from sales.admin import ProductResource
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
+@method_decorator(login_required, name='dispatch')
+class ProductImport(View):
+    template_name = 'product_list.html'
+    initial = {'key': 'value'}
+
+    def get(self, request):
+        format_form = ProductFormatImport(initial=self.initial)
+        print(format_form)
+        context = {}
+        context['format_import_form'] = format_form
+        return render(request, self.template_name, context)
+    
+    def post(self, request):
+        file = request.POST.get('file')
+        print(file)
+        return file
+
+@method_decorator(login_required, name='dispatch')
 class ProductImportExport(View):
     template_name = 'product_list.html'
     initial = {'key': 'value'}
@@ -42,7 +62,7 @@ class ProductImportExport(View):
         response["Content-Disposition"] = f"attachment; filename={name}.{format}"
         return response
     
-
+@method_decorator(login_required, name='dispatch')
 class ProductView(View):
     template_name = 'product_list.html'
     form_class = ProductForm
@@ -104,7 +124,7 @@ class ProductView(View):
         }
         return render(request, self.template_name, context)
 
-
+@method_decorator(login_required, name='dispatch')
 class ProductUpdateView(View):
     template_name = 'product_update.html'
     form_class = ProductForm
@@ -133,12 +153,14 @@ class ProductUpdateView(View):
         }
         return render(request, self.template_name, context)
 
+@login_required()
 def importProduct(request):
     product_resource = resources.modelresource_factory(model=Product)()
     dataset = Dataset(['', 'New book'], headers=['id', 'name'])
     result = product_resource.import_data(dataset, dry_run=False)
     return HttpResponse(result)
 
+@login_required()
 def exportProduct(request):
     dataset = ProductResource().export()
     print(dataset)
@@ -164,13 +186,14 @@ def exportProduct(request):
 #             return redirect("sales:product_list")
         
 #     return redirect("sales:product_list")
-
+@login_required()
 def add_to_cart(request, id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=id)
     cart.add(product=product, quantity=1, update_quantity=True)
     return redirect('sales:product_list')
 
+@method_decorator(login_required, name='dispatch')
 class StockView(View):
     template_name = 'stock/stock_list.html'
     form_class = StockForm

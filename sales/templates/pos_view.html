@@ -48,13 +48,19 @@
     </div>
     <div class="col-sm-5">
         <div class="fcard mb-2 mt-3">
-            <div>
-                <strong>Cart items</strong>
+            <div class="float-end">
+                <div class="fcard-body float-end">
                 {% if cart %}
-                <a href="{% url 'sales:clear_cart' %}" class="btn btn-outline-danger btn-sm float-end">Clear cart</a>
+                    <a href="{% url 'sales:clear_cart' %}" class="btn btn-outline-danger btn-sm">Clear cart</a>
                 {% else %}
-                <a href="{% url 'sales:clear_cart' %}" class="btn btn-outline-secondary btn-sm float-end disabled" aria-disabled="true">Clear cart</a>
+                    <a href="{% url 'sales:clear_cart' %}" class="btn btn-outline-secondary btn-sm disabled" aria-disabled="true">Clear cart</a>
                 {% endif %}
+                </div>
+            </div>
+            <div class="fcard">
+                <strong class="fcard-title">
+                    <i class="fa-solid fa-cart-arrow-down"></i> Cart items
+                </strong>
             </div>
         </div>
         <div class="fcard mb-2 mt-2">
@@ -105,46 +111,25 @@
             </table>
         </div>
         <div class="fcard mb-2 mt-3">
-            <!-- <div class="row">
-                <div class="col-sm-12">
-                    <div class="fcard mt-2">
-                        <form action="{% url 'sales:pos_view' %}" class="form" enctype="multipart/form-data" method="GET">
-                            {% csrf_token %}
-                            <div class="input-group">
-                                
-                                <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
-                                    <option selected>Choose...</option>
-                                    {% for customer in customers %}
-                                    <option value="{{ customer }}" name="{{ customer }}">{{ customer }}</option>
-                                    {% endfor %}
-                                </select>
-                                <button class="btn btn-outline-secondary" type="submit">Button</button>
-                                
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div> -->
             <div class="row">
-                <div class="col-sm-6">
-                    <!-- <form action="{% url 'sales:pos_view' %}" class="form" enctype="multipart/form-data" method="POST">
-                        {% csrf_token %}
-                        <select class="form-select form-select-sm" aria-label="Default select example">
-                            {% for customer in customers %}
-                            <option value="{{ customer }}" name="{{ customer }}">{{ customer }}</option>
-                            {% endfor %}
-                        </select>
-                        <input type="submit" value="Submit">
-                    </form> -->
-                    <strong class="float-left">Net Total: PHP {{ cart.get_total_price }}</strong>
-                </div>
-                <div class="col-md-6">
-                    <div style="text-align: right;">
-                        {% if cart %}
-                        <a class="btn btn-primary btn-sm" href="{% url 'sales:billing_information' %}">Confirm Payment</a>
-                        {% else %}
-                        <a href="#" class="btn btn-secondary btn-sm disabled" role="button" aria-disabled="true">Confirm Payment</a>
-                        {% endif %}
+                <div class="col-md-12">
+                    <div class="fcard">
+                        <div class="fcard-body">
+                            <div class="float-end">
+                                {% if cart %}
+                                <a href="{% url 'sales:clear_cart' %}" class="btn btn-outline-danger btn-sm">Clear cart</a>
+                                {% else %}
+                                <a href="{% url 'sales:clear_cart' %}" class="btn btn-outline-secondary btn-sm disabled" aria-disabled="true">Clear cart</a>
+                                {% endif %}
+                                {% if cart %}
+                                <a class="btn btn-primary btn-sm" href="{% url 'sales:billing_information' %}">Confirm Payment</a>
+                                {% else %}
+                                <a href="#" class="btn btn-secondary btn-sm disabled" role="button" aria-disabled="true">Confirm Payment</a>
+                                {% endif %}
+                            </div>
+                            <strong class="float-left">Net Total:</strong>
+                            <h1>PHP {{ cart.get_total_price }}</h1>
+                        </div>
                     </div>
                 </div>
             </div>

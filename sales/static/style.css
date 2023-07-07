@@ -8,9 +8,10 @@
     /* padding: .5rem; */
 }
 .fcard-title {
-    border-left: .5rem solid #3f91ee;
+    border-left: .3rem solid #3f91ee;
     margin-left: 0;
     padding: .5rem 0 .5rem 1rem;
+    margin: .5rem 0 .5rem 0;
 }
 .fcard-body {
     padding: .5rem;

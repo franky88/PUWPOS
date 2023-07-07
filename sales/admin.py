@@ -5,6 +5,8 @@ from import_export import resources
 from import_export.fields import Field
 # Register your models here.
 
+admin.site.site_header = "PCUWant"
+
 class ProductResource(resources.ModelResource):
     is_serial = Field()
     out_of_stock = Field()

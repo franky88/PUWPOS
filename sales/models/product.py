@@ -49,7 +49,7 @@ class Product(BaseTime):
     product_warranty = models.ForeignKey(ProductWarranty, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        name = "%s - %s" % (self.name, self.model)
+        name = "(%s) - %s - %s" % (self.bar_code, self.name, self.model)
         return name
     
     @property
