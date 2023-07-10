@@ -89,8 +89,14 @@
                                 <form action="{% url 'sales:cart_updated' product.id %}" method="post">
                                     {% csrf_token %}
                                     <div class="input-group">
+                                        {% if not product.is_serial %}
                                         <input style="width: 40px;" value="{{ item.update_quantity_form.quantity }}" min="1" type="number" name="number" class="form-control form-control-sm" placeholder="Quantity" aria-label="quantity" aria-describedby="button-addon2">
                                         <button class="btn btn-outline-success btn-sm" type="submit" id="button-addon2">Update</button>
+                                        {% else %}
+                                        <!-- <input style="width: 40px;" value="{{ item.update_quantity_form.quantity }}" min="1" type="number" name="number" class="form-control form-control-sm" placeholder="Quantity" aria-label="quantity" aria-describedby="button-addon2"> -->
+                                        <!-- <button class="btn btn-outline-success btn-sm" type="submit" id="button-addon2">Update</button> -->
+                                        {{ item.update_quantity_form.quantity }}
+                                        {% endif %}
                                     </div>
                                 </form>
                             </td>
