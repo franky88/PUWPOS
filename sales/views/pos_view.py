@@ -28,7 +28,6 @@ class POSView(View):
 def cart_add(request, id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=id)
-    # cart.add(product=product, quantity=1, update_quantity=True)
     if product.is_serial:
         cart.add(product=product, quantity=1, update_quantity=False)
     else:

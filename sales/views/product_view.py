@@ -13,6 +13,8 @@ from import_export import resources
 from sales.admin import ProductResource
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.db.models import Q
+from django.db.models import Sum, Count, F
 
 
 @method_decorator(login_required, name='dispatch')
@@ -75,8 +77,18 @@ class ProductView(View):
         format_form = ProductFormat(initial=self.initial)
         form = self.form_class(initial=self.initial)
         category_form = self.category_form_class(initial=self.initial)
-        products = Product.objects.all().order_by('-updated_at', '-created_at')
-        categories = ProductCategory.objects.all()
+        products = qs.order_by('-updated_at', '-created_at')
+        categories = ProductCategory.objects.annotate(count=Count('product__id'))
+        query = request.GET.get('q')
+
+        if query:
+            products = products.filter(
+                Q(bar_code__icontains=query) |
+                Q(name__icontains=query) |
+                Q(model__icontains=query) |
+                Q(category__name__icontains=query)
+            )
+
         context = {
             'products': products,
             'form': form,
@@ -88,24 +100,6 @@ class ProductView(View):
         return render(request, self.template_name, context)
     
     def post(self, request, *args, **kwargs):
-
-        # export products
-        # qs = Product.objects.all()
-        # dataset = ProductResource().export(qs)
-        # format = request.POST.get('format')
-        # print(format)
-        # if format == 'xls':
-        #     ds = dataset.xls
-        # elif format == 'csv':
-        #     ds = dataset.csv
-        # else:
-        #     ds = dataset.json
-        
-        # response = HttpResponse(ds, content_type = f'{format}')
-        # response["Content-Disposition"] = f"attachment; filename=products.{format}"
-        # return response
-
-        # create products
         form = self.form_class(request.POST or None)
         category_form = self.category_form_class(request.POST or None)
 
