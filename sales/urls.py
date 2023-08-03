@@ -1,7 +1,7 @@
 from django.urls import path
 from sales.views.product_view import ProductView, StockView, add_to_cart, ProductUpdateView, importProduct, exportProduct, ProductImportExport
 from sales.views.pos_view import POSView, cart_add, cart_updated, cart_remove, cart_clear
-from sales.views.order_view import OrderItemView, customer_order_details, OrderInformationView
+from sales.views.order_view import OrderItemView, customer_order_details, OrderInformationView, OrderListView
 
 app_name = 'sales'
 urlpatterns = [
@@ -17,6 +17,7 @@ urlpatterns = [
     path('billing-information/', OrderInformationView.as_view(), name='billing_information'),
     path('order-information/', OrderItemView.as_view(), name='order_information'),
     path('stocks/', StockView.as_view(), name="stock_list"),
+    path('orders/', OrderListView.as_view(), name="order_list_view"),
     path('clear-cart/', cart_clear, name="clear_cart"),
     path('customer-order-details/<int:pk>', customer_order_details, name="customer_orders")
 ]

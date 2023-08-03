@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %} Inventory || Order Record {% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-8">
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong>Orders</strong>
+            </div>
+        </div>
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Customer name</th>
+                            <th>Orders</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for obj in orders %}
+                        <tr>
+                            <td>{{obj.customer.full_name|title}}</td>
+                            <td>
+                                {{obj.products.name}}
+                                {% for product in obj.product %}
+                                    {{ product }}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div>
+                    <div>
+                        {% for obj in orders %}
+                        <div class="col">
+                          <div class="card">
+                            <div class="card-body">
+                              <h5 class="card-title">{{obj.full_name|title}} | Total order: {{ order_count }}</h5>
+                              <p class="card-text">{{obj.number|title}}</p>
+                              <a href="{% url 'sales:customer_orders' obj.pk %}" class="btn btn-outline-primary btn-sm">View order</a>
+                            </div>
+                            <div class="card-footer text-muted">
+                                <small class="text-muted">Created: {{obj.created_at|date}} | Updated: {{obj.updated_at|date}}</small>
+                            </div>
+                          </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

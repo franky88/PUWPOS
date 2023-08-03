@@ -34,18 +34,20 @@ class OrderInformationView(View):
         sale_form = self.sale_form(request.POST or None)
         customer_form = self.customer_form(request.POST or None)
         if sale_form.is_valid():
+            serial = request.POST.get('serial')
             for item in cart:
                 sale_obj = sale_form.save(commit=False)
-                order = OrderItem(
+                order_item = OrderItem(
                     customer = sale_obj.customer,
                     products = item['product'],
                     price = item['price'],
                     quantity = item['quantity'],
                     money_tender = sale_obj.money_tender,
+                    serial_number = serial
                 )
-                order.products.quantity -= order.quantity
-                order.products.save()
-                order.save()
+                order_item.products.quantity -= order_item.quantity
+                order_item.products.save()
+                order_item.save()
             cart.clear()
             return redirect('sales:pos_view')
         if customer_form.is_valid():
@@ -86,4 +88,17 @@ class OrderItemView(View):
         cart_items = cart.__len__()
         customer = Customer.objects.all()
         context = {'customer': customer, 'cart_items': cart_items}
+        return render(request, self.template_name, context)
+
+class OrderListView(View):
+    template_name = 'pos/order_list_view.html'
+    def get(self, request):
+        cart = Cart(request)
+        cart_items = cart.__len__()
+
+        orders = OrderItem.objects.filter(is_confirmed=False)
+        context = {
+            "title": "unconfired orders",
+            "orders": orders
+        }
         return render(request, self.template_name, context)

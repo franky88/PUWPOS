@@ -29,7 +29,9 @@ class OrderItem(models.Model):
     products = models.ForeignKey(Product, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
+    is_confirmed = models.BooleanField(default=False)
     money_tender = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    serial_number = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return f'{self.id}'
@@ -42,9 +44,9 @@ class OrderItem(models.Model):
     def get_change(self):
         change = self.money_tender - self.get_cost
         return change
-    
+
 @receiver(post_save, sender=OrderItem)
-def order_pro_save(sender, instance, created, *args, **kwargs):
+def orderitem_pro_save(sender, instance, created, *args, **kwargs):
     if created:
         uuid_code = str(uuid.uuid4()).replace("-", "").upper()[:8]
         instance.order_id = uuid_code
