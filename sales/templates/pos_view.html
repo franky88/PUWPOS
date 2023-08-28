@@ -30,8 +30,10 @@
                                 <small class="text-muted"><strong>Bar code:</strong> {{ product.bar_code|upper }}</small>
                             </td>
                             <td>{{ product.category }}</td>
-                            <td>{{ product.price }}</td>
-                            <td>{{ product.best_price }}</td>
+                            <td>{{ product.price|floatformat:"2g" }}
+                                <small class="text-muted">/ {{ product.unit }}</small>
+                            </td>
+                            <td>{{ product.best_price|floatformat:"2g" }}</td>
                             <td>{{ product.quantity }}</td>
                             <td>
                                 <a class="btn btn-outline-info btn-sm" href="{% url 'sales:product_update' product.id %}">Edit</a>
@@ -83,19 +85,15 @@
                                 <td>
                                     {{ product.name }} <br>
                                 </td>
-                                <td>{{ product.price }}</td>
-                                <td>{{ product.best_price }}</td>
-                                <td>{{ product.discount|floatformat:2 }} %</td>
+                                <td>{{ product.price|floatformat:"2g" }}</td>
+                                <td>{{ product.best_price|floatformat:"2g" }}</td>
+                                <td>{{ product.discount|floatformat:"2g" }} %</td>
                                 <td>
                                     <form action="{% url 'sales:cart_updated' product.id %}" method="post">
                                         {% csrf_token %}
                                         <div class="input-group">
-                                            {% if not product.is_serial %}
                                             <input style="width: 40px;" value="{{ item.update_quantity_form.quantity }}" min="1" type="number" name="number" class="form-control form-control-sm" placeholder="Quantity" aria-label="quantity" aria-describedby="button-addon2">
                                             <button class="btn btn-outline-success btn-sm" type="submit" id="button-addon2">Update</button>
-                                            {% else %}
-                                            {{ item.update_quantity_form.quantity }}
-                                            {% endif %}
                                         </div>
                                     </form>
                                 </td>
@@ -121,13 +119,13 @@
             <div class="card-body">
                 <div class="float-end">
                     {% if cart %}
-                    <a class="btn btn-primary btn-sm" href="{% url 'sales:billing_information' %}">Confirm Payment</a>
+                    <a class="btn btn-primary btn-sm" href="{% url 'sales:billing_information' %}">Confirm Order</a>
                     {% else %}
-                    <a href="#" class="btn btn-secondary btn-sm disabled" role="button" aria-disabled="true">Confirm Payment</a>
+                    <a href="#" class="btn btn-secondary btn-sm disabled" role="button" aria-disabled="true">Confirm Order</a>
                     {% endif %}
                 </div>
-                <strong class="float-left">Net Total:</strong>
-                <h1>PHP {{ cart.get_total_price }}</h1>
+                <small class="text-muted">Net Total:</small>
+                <h1>PHP {{ cart.get_total_price|floatformat:"2g" }}</h1>
             </div>
         </div>
         

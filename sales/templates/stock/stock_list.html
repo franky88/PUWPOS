@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-sm-3">
+    <div class="col-sm-2">
         <div class="card border-0 shadow-sm mt-3">
             <div class="card-header">
                 <strong>Update stock form</strong>
@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-7">
+    <div class="col-sm-8">
         <div class="card border-0 shadow-sm mt-3">
             <div class="card-header">
                 <strong>Stocks</strong>
@@ -47,10 +47,14 @@
                         <tr>
                             <td>{{ stock.name|upper }} - {{ stock.model|upper }}</td>
                             <td>{{ stock.quantity }}</td>
-                            <td>{{ stock.cost }}</td>
-                            <td>{{ stock.price }}</td>
-                            <td>{{ stock.best_price }}</td>
-                            <td>{{ stock.total_cost }}</td>
+                            <td>{{ stock.cost|floatformat:"2g" }}</td>
+                            <td>{{ stock.price|floatformat:"2g" }}
+                                <small class="text-muted">/ {{ stock.unit }}</small>
+                            </td>
+                            <td>{{ stock.best_price|floatformat:"2g" }}
+                                <small class="text-muted">/ {{ stock.unit }}</small>
+                            </td>
+                            <td>{{ stock.total_cost|floatformat:"2g" }}</td>
                             <td>
                                 <a href="">{{ stock.user|title }}</a>
                             </td>

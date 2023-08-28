@@ -7,12 +7,43 @@
             <strong>{{ title|title }}</strong>
         </div>
         <div class="fcard mt-2">
-            <strong>Name: {{ customer.full_name|title }}</strong>
+            <strong>Name: {{ customer.full_name|title }} today: {{ today }}</strong>
             <hr>
             {{ orders.money_tender }}
-            {% for order in orders %}
-                {{ order.order_id }} {{ order.products.name }} {{ order.money_received }} {{ order.quantity }} {{ order.get_cost }} {{ order.money_tender }} {{ order.get_change }}<br>
-            {% endfor %}
+            <table class="table table-striped table-sm">
+                <tr>
+                    <th>Date</th>
+                    <th>Order ID</th>
+                    <th>Items</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Warranty Expiration</th>
+                    <th>Warranty Status</th>
+                    <th>Action</th>
+                </tr>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.created|date }}</td>
+                    <td>{{ order.order_id }}</td>
+                    <td>{{ order.products.name }}</td>
+                    <td>{{ order.quantity }}</td>
+                    <td>{{ order.get_cost }}</td>
+                    <td>{{ order.warranty|date }} <br>
+                        <small>Days remaining: {{ order.warranty_duration }}</small>
+                    </td>
+                    <td>
+                        {{ order.warranty_status }}
+                    </td>
+                    <td>
+                        {% if order.warranty_duration > 1 %}
+                            <a href="">Replace</a>
+                        {% else %}
+                            <small class="text-muted">Expired</small>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
             <!-- {% for item in customer.orderitem_set.all %}
                 
                 {{ item.products.name|title }} {{ item.money_received }} {{ item.get_change }}<br>

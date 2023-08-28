@@ -1,5 +1,5 @@
 from sales.models.base import BaseTime
-from sales.models.product import Product, ProductWarranty, ProductCategory, ProductImage, StockTransaction
+from sales.models.product import Product, ProductWarranty, ProductCategory, ProductImage, StockTransaction, ProductUnit
 from sales.models.order import OrderItem, Customer
 
 
@@ -12,6 +12,7 @@ __all__ = [
     'ProductCategory',
     'ProductImage',
     'StockTransaction',
+    'ProductUnit',
     'OrderItem',
     'Customer',
     ]

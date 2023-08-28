@@ -1,12 +1,15 @@
 from sales.models.order import OrderItem, Customer
 from sales.models.product import Product
 from django.shortcuts import render, redirect, get_object_or_404
-from sales.forms.order_form import CustomerForm
+from sales.forms.customer_form import CustomerForm
 from sales.forms.sale_form import SaleForm
 from sales.addcart import Cart
 from django.views.generic import ListView
 from django.views import View
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required, permission_required
 import uuid
+import datetime
 
 
 class OrderInformationView(View):
@@ -16,8 +19,10 @@ class OrderInformationView(View):
     initial = {'key': 'value'}
     def get(self, request, *args, **kwargs):
         customers = Customer.objects.all().order_by('-created_at')
+
         cart = Cart(request)
         cart_items = cart.__len__()
+
         form = self.sale_form(initial=self.initial)
         customer_form = self.customer_form(initial=self.initial)
         context = {
@@ -29,6 +34,9 @@ class OrderInformationView(View):
             'cart_items': cart_items
         }
         return render(request, self.template_name, context)
+
+    # @login_required
+    # @permission_required('sales.add_orderitem', raise_exception=True)
     def post(self, request):
         cart = Cart(request)
         sale_form = self.sale_form(request.POST or None)
@@ -37,13 +45,11 @@ class OrderInformationView(View):
             serial = request.POST.get('serial')
             for item in cart:
                 sale_obj = sale_form.save(commit=False)
-                order_item = OrderItem(
+                order_item = OrderItem.objects.create(
                     customer = sale_obj.customer,
                     products = item['product'],
                     price = item['price'],
                     quantity = item['quantity'],
-                    money_tender = sale_obj.money_tender,
-                    serial_number = serial
                 )
                 order_item.products.quantity -= order_item.quantity
                 order_item.products.save()
@@ -74,10 +80,12 @@ def add_customer(request):
 def customer_order_details(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
     orders = OrderItem.objects.filter(customer=customer)
+    today = datetime.datetime.now()
     context = {
         "title": "customer order details",
         "customer": customer,
-        "orders": orders
+        "orders": orders,
+        "today": today,
     }
     return render(request, 'pos/customer_order_details.html', context)
 
@@ -93,12 +101,15 @@ class OrderItemView(View):
 class OrderListView(View):
     template_name = 'pos/order_list_view.html'
     def get(self, request):
+
         cart = Cart(request)
         cart_items = cart.__len__()
 
-        orders = OrderItem.objects.filter(is_confirmed=False)
+        orders = OrderItem.objects.all()
+        print(orders)
         context = {
             "title": "unconfired orders",
-            "orders": orders
+            "orders": orders,
+            "cart_items": cart_items
         }
         return render(request, self.template_name, context)

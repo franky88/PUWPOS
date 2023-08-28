@@ -1,6 +1,6 @@
 from django.contrib import admin
-from sales.models.product import Product, ProductCategory, ProductImage, StockTransaction
-from sales.models.order import Customer
+from sales.models.product import Product, ProductCategory, ProductImage, StockTransaction, ProductUnit, ProductWarranty
+from sales.models.order import Customer, OrderItem
 from import_export import resources
 from import_export.fields import Field
 # Register your models here.
@@ -32,3 +32,6 @@ admin.site.register(Customer)
 admin.site.register(ProductCategory)
 admin.site.register(ProductImage)
 admin.site.register(StockTransaction)
+admin.site.register(ProductUnit)
+admin.site.register(ProductWarranty)
+admin.site.register(OrderItem)

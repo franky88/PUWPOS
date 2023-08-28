@@ -21,6 +21,7 @@ class ProductForm(forms.ModelForm):
             'price_discount': TextInput(attrs={'class': 'form-control', 'id': 'price_discount', 'type': 'text'}),
             'price': TextInput(attrs={'class': 'form-control', 'id': 'price', 'type': 'text'}),
             'quantity': TextInput(attrs={'class': 'form-control', 'id': 'quantity', 'type': 'number'}),
+            'unit': Select(attrs={'class': 'form-control', 'id': 'unit', 'type': 'select'}),
             'product_warranty': Select(attrs={'class': 'form-control', 'id': 'product_warranty', 'type': 'select'}),
             'image': Select(attrs={'class': 'form-control', 'id': 'image', 'type': 'select'}),
         }

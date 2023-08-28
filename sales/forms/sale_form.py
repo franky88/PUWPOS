@@ -11,5 +11,4 @@ class SaleForm(ModelForm):
 
         widgets = {
             'customer': Select(attrs={'class': 'form-control', 'id': 'customer'}),
-            'money_tender': NumberInput(attrs={'class': 'form-control', 'id': 'money_tender', 'type': 'number'}),
         }

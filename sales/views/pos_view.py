@@ -7,29 +7,34 @@ from sales.models.product import Product
 from sales.models.order import Customer, OrderItem
 from sales.addcart import Cart
 
-class POSView(View):
-    template_name = 'pos_view.html'
-    def get(self, request):
-        products = Product.objects.all()
-        customers = Customer.objects.all()
-        cart = Cart(request)
-        cart_items = cart.__len__()
-        for item in cart:
-            item['update_quantity_form'] = {'quantity': item['quantity'], 'update': True}
-        context = {
-            'title': 'POS view',
-            'products': products,
-            'cart': cart,
-            'customers': customers,
-            'cart_items': cart_items
-        }
-        return render(request, self.template_name, context)
-    
+def POS_view(request):
+    products = Product.objects.all()
+    customers = Customer.objects.all()
+
+    cart = Cart(request)
+    cart_items = cart.__len__()
+
+    for item in cart:
+        item['update_quantity_form'] = {'quantity': item['quantity'], 'update': True}
+    # print("this is item",item['update_quantity_form'])
+
+    serial = request.GET.get('serial')
+    print("serial",serial)
+    context = {
+        'title': 'POS view',
+        'products': products,
+        'cart': cart,
+        'customers': customers,
+        'cart_items': cart_items,
+        # 'item': item
+    }
+    return render(request, 'pos_view.html', context)
+
 def cart_add(request, id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=id)
     if product.is_serial:
-        cart.add(product=product, quantity=1, update_quantity=False)
+        cart.add(product=product, quantity=1, update_quantity=True)
     else:
         cart.add(product=product, quantity=1, update_quantity=True)
     return redirect('sales:pos_view')
@@ -52,10 +57,7 @@ def cart_updated(request, id):
     if request.method == 'POST':
         number = int(request.POST.get('number'))
     product = get_object_or_404(Product, id=id)
-    if product.is_serial:
-        cart.add(product=product, quantity=number, update_quantity=False)
-    else:
-        cart.add(product=product, quantity=number, update_quantity=True)
+    cart.add(product=product, quantity=number, update_quantity=True)
     return redirect('sales:pos_view')
 
 @require_POST

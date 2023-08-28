@@ -55,6 +55,7 @@
                                     <th>Price</th>
                                     <th>Disc. Price</th>
                                     <th>Disc %</th>
+                                    <th>Warranty</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -64,9 +65,14 @@
                                     <td>{{ product.bar_code|upper }}</td>
                                     <td>{{ product.name|title }}</td>
                                     <td>{{ product.quantity }}</td>
-                                    <td>{{ product.price|floatformat:2 }}</td>
-                                    <td>{{ product.best_price|floatformat:2 }}</td>
-                                    <td>{{ product.discount|floatformat:2 }}</td>
+                                    <td>{{ product.price|floatformat:"2g" }}
+                                        <small class="text-muted">/ {{ product.unit }}</small>
+                                    </td>
+                                    <td>{{ product.best_price|floatformat:"2g" }}
+                                        <small class="text-muted">/ {{ product.unit }}</small>
+                                    </td>
+                                    <td>{{ product.discount|floatformat:"2g" }}</td>
+                                    <td>{{ product.product_warranty }}</td>
                                     <td>
                                         <a href="{% url 'sales:product_update' product.id %}" class="btn btn-outline-info btn-sm">Update</a>
                                         {% if product.out_of_stock %}

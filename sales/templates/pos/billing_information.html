@@ -5,63 +5,70 @@
 {% block content %}
 <div class="row">
     <div class="col-sm-6">
-        <div class="fcard mt-3">
-            <strong>Order details</strong>
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong>Order details</strong>
+            </div>
+            
+            <div class="card-body">
+                <table class="table table-sm" style="vertical-align: middle;">
+                    <thead>
+                        <tr>
+                            <th>Items</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Sub total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart %}
+                        <tr>
+                            <td>
+                                <b>{{ item.product }}</b>
+                            </td>
+                            <td>
+                                {{ item.quantity }}
+                            </td>
+                            <td>
+                                {{ item.price|floatformat:"2g"}}
+                            </td>
+                            <td>
+                                {{ item.total_price|floatformat:"2g" }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="fcard mt-2">
-            <table class="table table-sm" style="vertical-align: middle;">
-                <thead>
-                    <tr>
-                        <th>Particulars</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Sub total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in cart %}
-                    <tr>
-                        <td>
-                            <b>{{ item.product }}</b>
-                        </td>
-                        <td>
-                            {{ item.quantity }}
-                        </td>
-                        <td>
-                            {{ item.price}}
-                        </td>
-                        <td>
-                            {{ item.total_price }}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="fcard mt-2" style="text-align: right;">
-            <small>Total</small>
-            <h2 class="float-right">
-                PHP {{ cart.get_total_price }} 
-            </h2>
+        
+        <div class="card border-0 shadow-sm mt-2" style="text-align: right;">
+            <div class="card-body">
+                <small>Total</small>
+                <h2 class="float-right">
+                    PHP {{ cart.get_total_price|floatformat:"2g" }} 
+                </h2>
+            </div>
         </div>
     </div>
     <div class="col-sm-6">
-        <div class="fcard mt-3">
-            <div>
-                <strong class="box-title">Confirm Order</strong>
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong class="box-title">Confirm payment</strong>
                 <a type="button" class="btn btn-outline-primary btn-sm float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     <i class="fa-solid fa-plus"></i> Customer
                 </a>
             </div>
+            <div class="card-body">
+                <form action="{% url 'sales:billing_information' %}" class="form" method="POST">
+                    {% csrf_token %}
+                    {{ sale_form.as_p }}
+                    <!-- <input type="number" name="money_tender" placeholder="Amount"> -->
+                    <button type="submit" class="btn-upper btn btn-primary checkout-page-button">Confirm Payment</button>
+                </form>
+            </div>
         </div>
-        <div class="fcard mt-2">
-            <form action="{% url 'sales:billing_information' %}" class="form" method="POST">
-                {% csrf_token %}
-                {{ sale_form.as_p }}
-                <!-- <input type="number" name="money_tender" placeholder="Amount"> -->
-                <button type="submit" class="btn-upper btn btn-primary checkout-page-button">Confirm Order</button>
-            </form>
-        </div>
+        
         <!-- <div class="fcard mt-2">
             <form method="POST" action="{% url 'sales:billing_information' %}" class="register-form"
             role="form">
@@ -116,5 +123,9 @@
       </div>
     </div>
 </div>
-
+<div class="row">
+    <div class="col-sm-12">
+        <h1>{{ item }}</h1>
+    </div>
+</div>
 {% endblock %}

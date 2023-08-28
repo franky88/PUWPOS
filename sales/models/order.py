@@ -1,6 +1,7 @@
 from django.db import models
-
+import datetime
 from sales.models.base import BaseTime
+from django.contrib.auth.models import User
 from sales.models.product import Product
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
@@ -30,8 +31,9 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
     is_confirmed = models.BooleanField(default=False)
-    money_tender = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    is_replaced = models.BooleanField(default=False)
     serial_number = models.CharField(max_length=100, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.id}'
@@ -41,13 +43,37 @@ class OrderItem(models.Model):
         return self.price * self.quantity
     
     @property
-    def get_change(self):
-        change = self.money_tender - self.get_cost
-        return change
+    def warranty(self):
+        warranty_due = self.created + datetime.timedelta(days=self.products.product_warranty.warranty_duration)
+        return warranty_due
+    
+    @property
+    def warranty_duration(self):
+        today = datetime.datetime.now()
+        duration = self.warranty.date() - today.date()
+        return duration.days
+    
+    @property
+    def warranty_status(self):
+        today = datetime.datetime.now()
+        duration = self.warranty.date() - today.date()
+        if duration.days < 1:
+            return "Warranty Expired"
+        else:
+            return "On warranty"
+        
+class Warranty(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(OrderItem, on_delete=models.CASCADE)
+    serial = models.CharField(max_length=120, unique=True)
+    remarks = models.TextField(blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.product
 
 @receiver(post_save, sender=OrderItem)
-def orderitem_pro_save(sender, instance, created, *args, **kwargs):
+def orderitem_post_save(sender, instance, created, *args, **kwargs):
     if created:
         uuid_code = str(uuid.uuid4()).replace("-", "").upper()[:8]
         instance.order_id = uuid_code
-        instance.save()

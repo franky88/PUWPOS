@@ -9,8 +9,7 @@ from import_export import resources
 
 class ProductWarranty(models.Model):
     name = models.CharField(max_length=100, default="6 months")
-    date_purchased = models.DateTimeField(blank=True, null=True)
-    warranty_duration = models.IntegerField(default=180)
+    warranty_duration = models.PositiveIntegerField(default=180)
 
     def __str__(self):
         return self.name
@@ -31,6 +30,13 @@ class ProductCategory(models.Model):
     def __str__(self):
         return self.name
 
+class ProductUnit(models.Model):
+    unit = models.CharField(max_length=60)
+
+    def __str__(self):
+        return self.unit
+
+
 class Product(BaseTime):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     product_code = models.CharField(max_length=13, unique=True, blank=True)
@@ -44,6 +50,7 @@ class Product(BaseTime):
     price_discount = models.FloatField(default=0.00)
     price = models.FloatField(default=0.00, verbose_name="SRP")
     quantity = models.PositiveIntegerField(default=1)
+    unit = models.ForeignKey(ProductUnit, on_delete=models.SET_NULL, null=True)
     is_serial = models.BooleanField(default=False, verbose_name="with serial?")
     out_of_stock = models.BooleanField(default=False)
     product_warranty = models.ForeignKey(ProductWarranty, on_delete=models.CASCADE, blank=True, null=True)

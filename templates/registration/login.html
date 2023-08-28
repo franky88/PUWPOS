@@ -21,20 +21,20 @@
                 </div>
             </div>
             <br>
-            <div class="card">
-                <div class="card-header">
-                    <strong>Login</strong>
-                </div>
-                <form method="post" action="{% url 'login' %}">
+            <div class="card border-0 shadow-0">
                 <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Login</strong>
+                    </div>
+                    <form method="post" action="{% url 'login' %}">
                     {% csrf_token %}
                     {{form|crispy}}
+                    <div class="d-flex">
+                        <input class="btn btn-primary btn-sm" type="submit" value="login" />
+                        <input type="hidden" name="next" value="{{ next }}" />
+                    </div>
+                    </form>
                 </div>
-                <div class="card-footer">
-                    <input class="btn btn-primary btn-sm" type="submit" value="login" />
-                    <input type="hidden" name="next" value="{{ next }}" />
-                </div>
-                </form>
             </div>
         </div>
     </div>
